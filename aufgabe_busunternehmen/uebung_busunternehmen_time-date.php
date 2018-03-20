@@ -1,8 +1,7 @@
 <?php
     $db_name = 'busunternehmen';
-    require 'connect.inc.php';
-    
-    
+    $optionen = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_BOTH);
+    require '../connect.inc.php';
 ?>
 
 <!DOCTYPE html>
