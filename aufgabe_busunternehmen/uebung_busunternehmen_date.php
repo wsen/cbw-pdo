@@ -13,10 +13,10 @@
         <script src="../../script/jquery-3.3.1.min.js"></script>
 		<!-- <script src="http://10.10.56.134/script/jquery-3.3.1.min.js"></script> -->
 		<style>
-            table { border-collapse: collapse; }
+            table { border-collapse: collapse;}
 			th, td { border: 1px solid gray; 
-                    padding: 5px 10px;
-                    }
+                    padding: 5px 10px;		
+					}
 		</style>
 
 	</head>
@@ -24,7 +24,7 @@
 	<body>
 	    <h2>Übung mit DB: Busunternehmen</h2>
 	    <h2>Übung 2</h3>
-        <table>
+        <table cellpadding="10">
         <thead><th>fahrtNr</th><th>busNr</th><th>fahrerName</th><th>abfahrtzeit</th><th>fahrtziel</th><th>fahrtdatum</th></thead>
         <tbody>
         <?php
@@ -38,10 +38,7 @@
             FROM fahrt INNER JOIN fahrer ON (fahrt.fahrerNr=fahrer.fahrerNr)
             JOIN fahrtziele ON (fahrt.fahrtzielNr=fahrtziele.fahrtzielNr)"
             );
-            //Nur zum Testen ob DB reagiert
-            //$stm = $db->query("SELECT * FROM fahrt");
-            //$data = $stm->fetchAll();
-            //var_dump($data);
+
             $erg = $stm->fetchAll();
             
             foreach($erg as $data) {
@@ -96,7 +93,7 @@
         <h2>Übung 3</h3>
         <table>
         <thead><th>fahrtNr</th><th>bus</th><th>fahrerName</th><th>abfahrtzeit</th><th>fahrtziel</th>
-        <th>fahrtdatum</th><th>fahrtzeit</th><th>ankunftzeit</th></thead>
+        <th>fahrtdatum</th><th>fahrtzeit</th><th>php ankunftzeit</th></thead>
         <tbody>
         <?php
             $stm3 = $db->query("SELECT
@@ -107,10 +104,8 @@
             fahrtziele.fahrtziel,
             fahrtdatum,
             fahrtziele.fahrtzeit,
-            ADDTIME(
-                CONCAT(fahrt.fahrtdatum,' ',fahrt.abfahrtzeit),
-                CONCAT(fahrtziele.fahrtzeit,':00')
-            )
+            CONCAT(fahrt.fahrtdatum,' ',fahrt.abfahrtzeit),
+            fahrtziele.fahrtzeit
             FROM fahrt JOIN fahrer ON (fahrt.fahrerNr=fahrer.fahrerNr)
             JOIN fahrtziele ON (fahrt.fahrtzielNr=fahrtziele.fahrtzielNr)
             JOIN bus ON (fahrt.busNr=bus.busNr)
@@ -128,6 +123,22 @@
             DATE_ADD(CONCAT(fahrtdatum,' ',abfahrtzeit), INTERVAL fahrtziele.fahrtzeit HOUR_MINUTE)
             */
 
+            function nicetime($date,$timeroom)
+            {
+                if(empty($date)) {
+                    return "No date provided";
+                }
+                
+                $unix_date         = strtotime($date);
+                $timeroom_arr  = explode(':',$timeroom);
+                $timeroom_h = $timeroom_arr[0] * 3600;
+                $timeroom_m = $timeroom_arr[1] * 60;
+                
+                $unix_date_final = $unix_date + $timeroom_h + $timeroom_m; 
+
+                return date("d.m H:i",$unix_date_final);
+            }
+
 
             $erg3 = $stm3->fetchAll();
             
@@ -140,7 +151,10 @@
                 .$data[4].'</td><td>'
                 .$data[5].'</td><td>'
                 .$data[6].'</td><td>'
-                .date('Y.m.d',strtotime($data[7])).' <b>'.date('h:m',strtotime($data[7])).'</b></td></tr>';
+                .nicetime($data[7],$data[8]).'</td><tr>';
+                
+                //.(date('H',$data[8])+date('i',$data[8])).'</td></tr>';
+                //.date('Y.m.d',strtotime($data[7])).' <b>'.date('h:m',strtotime($data[7])).'</b></td></tr>';
             } //$ankunftzeit->format('h:m')
         ?>
         </tbody>
@@ -159,7 +173,10 @@
             abfahrtzeit,
             fahrtziele.fahrtziel,
             fahrtdatum,
-            DATE_ADD(CONCAT(fahrtdatum,' ',abfahrtzeit), INTERVAL fahrtziele.fahrtzeit HOUR_MINUTE),
+            ADDTIME(
+                CONCAT(fahrt.fahrtdatum,' ',fahrt.abfahrtzeit),
+                CONCAT(fahrtziele.fahrtzeit,':00')
+            ),
             (gebuchtePlaetze * fahrtziele.fahrpreis)
             FROM fahrt 
             JOIN fahrer ON (fahrt.fahrerNr=fahrer.fahrerNr)
@@ -169,6 +186,7 @@
             //fahrtziele.fahrtzeit 
             //'ADDTIME('fahrtdatum abfahrtzeit', 'ankunftzeit')
             //DATE_ADD('2017-03-15 07:00:00', INTERVAL '14:51:00' HOUR)
+            //DATE_ADD(CONCAT(fahrtdatum,' ',abfahrtzeit), INTERVAL fahrtziele.fahrtzeit HOUR_MINUTE),
             //https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html#function_date-add
 
 
