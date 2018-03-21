@@ -4,17 +4,14 @@
 
     $vnamen = file('../data/vornamen.csv');
     $vornamen = array_slice($vnamen, 0, 100);
-    $vornamen = array_unique($vornamen);
-    
+    $vornamen = array_unique($vornamen);   
     $vornamen = array_values($vornamen); //array neue indiziert
     $vornamen = array_map('trim', $vornamen);
-    
     
 
     $nnamen = file('../data/nachnamen.csv');
     $nachnamen = array_slice($nnamen, 0, 100);
-    $nachnamen = array_unique($nachnamen);
-    
+    $nachnamen = array_unique($nachnamen);    
     $nachnamen = array_values($nachnamen); //array neue indiziert
     $nachnamen = array_map('trim', $nachnamen);
     shuffle($nachnamen);
