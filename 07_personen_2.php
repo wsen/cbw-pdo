@@ -20,7 +20,9 @@
 		</style>
 
 		<script>
-		
+		    table { border-collapse: collapse; }
+            th, td { border: 1px solid gray; 
+                    padding 3px 5px; }
 		</script>
 	</head>
 	

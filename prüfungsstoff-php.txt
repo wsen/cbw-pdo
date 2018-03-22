@@ -1,0 +1,12 @@
+string funktionen
+array funktionen
+variablen funktionen
+
+rückgabe werte der funktionen und deren datentyp
+
+anzahl der argumente, die eine funktion erwartet
+
+cookies
+sessions
+
+objekte und methoden (PDO)
